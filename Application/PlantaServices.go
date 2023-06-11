@@ -43,10 +43,11 @@ func AddManyNutrients(plants []Entities2.Plant) []Entities2.Plant {
 
 }
 
-func DecreaseWater(plant Entities2.Plant) Entities2.Plant {
-
+func DecreaseWater() {
+	// Esta funcion recoge a todas las plantas y le agua baja segun lo explicado en el documento
 }
 
-func DecreaseNutrients(plant Entities2.Plant) Entities2.Plant {
+func DecreaseNutrients() {
+	// Esta funcion recoge a todas las plantas y le baja nutrientes segun lo explicado en el documento
 
 }
