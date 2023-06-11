@@ -1,7 +1,7 @@
 package Entities
 
-type IPlantaRepositorio interface {
-	GetPlantas() []Plant
+type IPlantRepositorio interface {
+	GetPlants() []Plant
 	GetPlant(id uint) Plant
 	NewPlant(plant Plant) bool
 	UpdatePlant(plant Plant) bool

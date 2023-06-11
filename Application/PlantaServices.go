@@ -5,14 +5,17 @@ import (
 )
 
 func GetPlants() []Entities2.Plant {
-
+	var _plants Entities2.IPlantRepositorio
+	var plants []Entities2.Plant
+	plants = _plants.GetPlants()
+	return plants
 }
 
 func GetPlant(id uint) Entities2.Plant {
 
 }
 
-func NewPlant(plant Entities2.Plant) bool {
+func NewPlant(plant Entities2.PlantDTO) bool {
 
 }
 
