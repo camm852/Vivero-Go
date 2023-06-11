@@ -1,9 +1,6 @@
 package Entities
 
-import "time"
-
-type Plant struct {
-	Id                      uint
+type PlantDTO struct {
 	Name                    string
 	DegreeSurvival          float64
 	AmountWaterRequired     float64
@@ -12,5 +9,4 @@ type Plant struct {
 	AmountNutrientsRequired float64
 	AmountNutrientsSystem   float64
 	DegreeNutrition         int
-	CreatedDate             time.Time
 }
