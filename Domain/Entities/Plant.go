@@ -12,5 +12,5 @@ type Plant struct {
 	AmountNutrientsRequired float64
 	AmountNutrientsSystem   float64
 	DegreeNutrition         int
-	CreatedDate             time.Time
+	LastUpdate              time.Time
 }

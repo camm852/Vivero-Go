@@ -1,6 +1,7 @@
 package Entities
 
 type PlantDTO struct {
+	Id                      uint
 	Name                    string
 	DegreeSurvival          float64
 	AmountWaterRequired     float64
