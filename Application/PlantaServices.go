@@ -12,11 +12,11 @@ func GetPlant(id uint) Entities2.Plant {
 
 }
 
-func NewPlant(Plant Entities2.Plant) bool {
+func NewPlant(plant Entities2.Plant) bool {
 
 }
 
-func UpdatePlant(Plant Entities2.Plant) bool {
+func UpdatePlant(plant Entities2.Plant) bool {
 
 }
 
