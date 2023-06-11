@@ -32,3 +32,9 @@ func (s Plant) GetPlant(id uint) Plant {
 	//students = metodoParaLeerBd
 	return plant
 }
+
+func (s Plant) NewPlant(Plant Plant) bool {
+	//var creada = metodoGuardarDB()
+	//return creada
+	return false
+}
