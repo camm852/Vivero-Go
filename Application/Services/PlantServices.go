@@ -15,9 +15,10 @@ func GetPlants() []Entities.Plant {
 
 func GetPlant(id uint) (Entities.Plant, error) {
 	//logica para encontrarlo
-	var plant Entities.Plant = Entities.Plant{}
+	var _plant Entities.IPlantRepository = Entities.Plant{}
+	var result = _plant.GetPlant(id)
 
-	return plant, nil
+	return result
 
 }
 
