@@ -8,5 +8,5 @@ type PlantDTO struct {
 	DegreeHydration         uint    `json:"degreeHydration"`
 	AmountNutrientsRequired uint    `json:"amountNutrientsRequired"`
 	AmountNutrientsSystem   float64 `json:"amountNutrientsSystem"`
-	DegreeNutrition         int     `json:"degreeNutrition"`
+	DegreeNutrition         uint    `json:"degreeNutrition"`
 }
