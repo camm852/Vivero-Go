@@ -1,7 +1,13 @@
-package tamaguchi
+package main
 
-import "fmt"
+import (
+	"github.com/gin-gonic/gin"
+	"proyecto.com/Router"
+)
 
 func main() {
-	fmt.Println("¡Hola, mundo!")
+	router := gin.Default()
+	Router.PlantRoutes(router)
+
+	router.Run(":5000")
 }

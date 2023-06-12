@@ -1,13 +1,12 @@
 package Entities
 
 type PlantDTO struct {
-	Id                      uint
-	Name                    string
-	DegreeSurvival          float64
-	AmountWaterRequired     float64
-	AmountWaterSystem       float64
-	DegreeHydration         uint
-	AmountNutrientsRequired float64
-	AmountNutrientsSystem   float64
-	DegreeNutrition         int
+	Name                    string  `json:"name"`
+	DegreeSurvival          float64 `json:"degreeSurvival"`
+	AmountWaterRequired     float64 `json:"amountWaterRequired"`
+	AmountWaterSystem       float64 `json:"amountWaterSystem"`
+	DegreeHydration         uint    `json:"degreeHydration"`
+	AmountNutrientsRequired float64 `json:"amountNutrientsRequired"`
+	AmountNutrientsSystem   float64 `json:"amountNutrientsSystem"`
+	DegreeNutrition         int     `json:"degreeNutrition"`
 }
