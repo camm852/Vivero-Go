@@ -3,7 +3,7 @@ package Entities
 type IPlantRepository interface {
 	GetPlants() []Plant
 	GetPlant(id uint) Plant
-	NewPlant(plant Plant) bool
+	NewPlant(plant *Plant) bool
 	UpdatePlant(plant Plant) bool
 	DeletePlant(id uint) bool
 }
@@ -21,7 +21,7 @@ func (s Plant) GetPlant(id uint) Plant {
 	return plant
 }
 
-func (s Plant) NewPlant(plant Plant) bool {
+func (s Plant) NewPlant(plant *Plant) bool {
 	//var created = codigo para guardar la planta
 	//return creada
 	return false

@@ -20,7 +20,15 @@ func GetPlant(id uint) Entities.Plant {
 }
 
 func NewPlant(plant *Entities.Plant) bool {
+	var _plants Entities.IPlantRepository = Entities.Plant{}
+
+	var plantCreated = _plants.NewPlant(plant)
+
+	if !plantCreated {
+		return false
+	}
 	return true
+
 }
 
 /*func UpdatePlant(plant Entities.Plant) bool {
