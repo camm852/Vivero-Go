@@ -86,7 +86,7 @@ func AddManyNutrient(context *gin.Context) {
 
 	plants := func() (plants []Entities.Plant) {
 		for _, plant := range plants {
-			plantFinded, err := Services.GetPlant(plant.Id)
+			plantFinded, err := Services.GetPlant(plant.ID)
 			if err != nil {
 				continue
 			}
