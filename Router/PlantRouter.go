@@ -11,5 +11,10 @@ func PlantRoutes(router *gin.Engine) {
 		plantRounter.GET("/", Api.GetPlants)
 		plantRounter.POST("/", Api.NewPlant)
 		plantRounter.GET("/:id", Api.GetPlant)
+
+		nutrientRouter := plantRounter.Group("/nutrient")
+		{
+			nutrientRouter.POST("/add/", Api.AddNutrient)
+		}
 	}
 }

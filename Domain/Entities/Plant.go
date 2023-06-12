@@ -9,7 +9,7 @@ type Plant struct {
 	AmountWaterRequired     float64   `json:"amountWaterRequired"`
 	AmountWaterSystem       float64   `json:"amountWaterSystem"`
 	DegreeHydration         uint      `json:"degreeHydration"`
-	AmountNutrientsRequired float64   `json:"amountNutrientsRequired"`
+	AmountNutrientsRequired uint      `json:"amountNutrientsRequired"`
 	AmountNutrientsSystem   float64   `json:"amountNutrientsSystem"`
 	DegreeNutrition         int       `json:"degreeNutrition"`
 	LastUpdate              time.Time `json:"lastUpdate"`

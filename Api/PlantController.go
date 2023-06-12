@@ -2,8 +2,9 @@ package Api
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 	"proyecto.com/Application/Mappers"
 	"proyecto.com/Application/Services"
 	Entities "proyecto.com/Domain/Entities"
@@ -20,7 +21,7 @@ func GetPlants(context *gin.Context) {
 func GetPlant(context *gin.Context) {
 	var id uint = Utils.ParseUint(context.Param("id"))
 
-	var plant Entities.Plant = Services.GetPlant(id)
+	plant, _ := Services.GetPlant(id)
 
 	context.IndentedJSON(http.StatusOK, plant)
 }
