@@ -16,10 +16,8 @@ func GetPlants() []Entities.Plant {
 func GetPlant(id uint) (Entities.Plant, error) {
 	//logica para encontrarlo
 	var _plant Entities.IPlantRepository = Entities.Plant{}
-	plant, err = _plant.GetPlant(id)
-
+	plant, err := _plant.GetPlant(id)
 	return plant, err
-
 }
 
 func NewPlant(plant *Entities.Plant) bool {

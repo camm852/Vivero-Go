@@ -22,8 +22,12 @@ func GetPlants(context *gin.Context) {
 func GetPlant(context *gin.Context) {
 	var id uint = Utils.ParseUint(context.Param("id"))
 
-	plant, _ := Services.GetPlant(id)
+	plant, error := Services.GetPlant(id)
 
+	if error != nil {
+		context.IndentedJSON(http.StatusNotFound, gin.H{"msg": "No se encontro la planta"})
+		return
+	}
 	context.IndentedJSON(http.StatusOK, plant)
 }
 
