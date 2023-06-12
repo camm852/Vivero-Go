@@ -2,37 +2,58 @@ package Api
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"proyecto.com/Application/Services"
+	dto "proyecto.com/Domain/Dto"
 )
 
 func AddNutrient(context *gin.Context) {
 	//Getting Data
-	id, err := strconv.Atoi(context.Param("id"))
-	if (err != nil) && (id < 0) {
-		// Bad Request
+	if func() bool {
+		id := context.PostForm("id")
+		amount := context.PostForm("amount")
+		return (id == "" || amount == "")
+	}() {
 		context.IndentedJSON(http.StatusBadRequest, nil)
+		return
 	}
 
-	amountNutrient, err := strconv.Atoi(context.Param("amountNutrient"))
-	if (err != nil) && (amountNutrient < 0) {
+	plantNutrientDTO := dto.PlantSupplyDTO{}
+
+	if err := context.ShouldBind(&plantNutrientDTO); err != nil {
 		// Bad Request
 		context.IndentedJSON(http.StatusBadRequest, nil)
+		return
+	}
+
+	id := plantNutrientDTO.Id
+	if id < 0 {
+		// Bad Request
+		context.IndentedJSON(http.StatusBadRequest, nil)
+		return
+	}
+
+	amountNutrient := plantNutrientDTO.Amount
+	if amountNutrient < 0 {
+		// Bad Request
+		context.IndentedJSON(http.StatusBadRequest, nil)
+		return
 	}
 
 	plant, err := Services.GetPlant(uint(id))
 	if err != nil {
 		// Bad Request
 		context.IndentedJSON(http.StatusBadRequest, nil)
+		return
 	}
 
 	err = Services.AddNutrients(plant, uint(amountNutrient))
 	if err != nil {
 		// Bad Request
 		context.IndentedJSON(http.StatusBadRequest, nil)
+		return
 	}
-	context.IndentedJSON(http.StatusOK, nil)
 
+	context.IndentedJSON(http.StatusOK, nil)
 }
