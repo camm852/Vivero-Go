@@ -22,7 +22,15 @@ func GetPlant(id uint) (Entities.Plant, error) {
 }
 
 func NewPlant(plant *Entities.Plant) bool {
+	var _plants Entities.IPlantRepository = Entities.Plant{}
+
+	var plantCreated = _plants.NewPlant(plant)
+
+	if !plantCreated {
+		return false
+	}
 	return true
+
 }
 
 func AddNutrients(plant Entities.Plant, amountNutrients uint) error {
