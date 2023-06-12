@@ -9,7 +9,7 @@ type Plant struct {
 	AmountWaterRequired     float64   `gorm:"column:amountWaterRequired" json:"amountWaterRequired"`
 	AmountWaterSystem       float64   `gorm:"column:amountWaterSystem" json:"amountWaterSystem"`
 	DegreeHydration         int       `gorm:"column:degreeHydration" json:"degreeHydration"`
-	AmountNutrientsRequired float64   `gorm:"column:amountNutrientsRequired" json:"amountNutrientsRequired"`
+	AmountNutrientsRequired uint   `gorm:"column:amountNutrientsRequired" json:"amountNutrientsRequired"`
 	AmountNutrientsSystem   float64   `gorm:"column:amountNutrientsSystem" json:"amountNutrientsSystem"`
 	DegreeNutrition         int       `gorm:"column:degreeNutrition" json:"degreeNutrition"`
 	Created                 time.Time `gorm:"column:created" json:"created"`

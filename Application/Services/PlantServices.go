@@ -1,6 +1,8 @@
 package Services
 
 import (
+	"errors"
+
 	Entities "proyecto.com/Domain/Entities"
 )
 
@@ -11,11 +13,11 @@ func GetPlants() []Entities.Plant {
 	return plants
 }
 
-func GetPlant(id uint) Entities.Plant {
+func GetPlant(id uint) (Entities.Plant, error) {
 	//logica para encontrarlo
 	var plant Entities.Plant = Entities.Plant{}
 
-	return plant
+	return plant, nil
 
 }
 
@@ -31,6 +33,14 @@ func NewPlant(plant *Entities.Plant) bool {
 
 }
 
+func AddNutrients(plant Entities.Plant, amountNutrients uint) error {
+	if plant.AmountNutrientsRequired == 0 {
+		return errors.New("Division by zero")
+	}
+	plant.AmountNutrientsSystem += float64(amountNutrients) / float64(plant.AmountNutrientsRequired)
+	return nil
+}
+
 /*func UpdatePlant(plant Entities.Plant) bool {
 
 }
@@ -44,10 +54,6 @@ func AddWater(plant Entities.Plant) Entities.Plant {
 }
 
 func AddManyWater(plants []Entities.Plant) []Entities.Plant {
-
-}
-
-func AddNutrients(plant Entities.Plant) Entities.Plant {
 
 }
 
