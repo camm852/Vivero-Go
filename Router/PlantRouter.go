@@ -6,11 +6,11 @@ import (
 )
 
 func PlantRoutes(router *gin.Engine) {
-	plantRounter := router.Group("/plant")
+	plantRouter := router.Group("/plant")
 	{
-		plantRounter.GET("/", Api.GetPlants)
-		plantRounter.POST("/", Api.NewPlant)
-		plantRounter.GET("/:id", Api.GetPlant)
-		plantRounter.POST("/nutrients", Api.AddNutrient)
+		plantRouter.GET("/", Api.GetPlants)
+		plantRouter.POST("/", Api.NewPlant)
+		plantRouter.GET("/:id", Api.GetPlant)
+		plantRouter.POST("/nutrients", Api.AddNutrient)
 	}
 }
