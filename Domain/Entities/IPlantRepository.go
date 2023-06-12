@@ -1,5 +1,7 @@
 package Entities
 
+import "proyecto.com/Infraestructure/Database"
+
 type IPlantRepository interface {
 	GetPlants() []Plant
 	GetPlant(id uint) Plant
@@ -22,9 +24,14 @@ func (s Plant) GetPlant(id uint) Plant {
 }
 
 func (s Plant) NewPlant(plant *Plant) bool {
-	//var created = codigo para guardar la planta
-	//return creada
-	return false
+	createdPlant := Database.DB.Create(plant)
+
+	err := createdPlant.Error
+
+	if err != nil {
+		return false
+	}
+	return true
 }
 
 func (s Plant) UpdatePlant(plant Plant) bool {
