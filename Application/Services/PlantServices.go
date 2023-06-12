@@ -37,6 +37,7 @@ func AddNutrient(plant Entities.Plant, amountNutrient uint) error {
 		return errors.New("Division by zero")
 	}
 	plant.AmountNutrientsSystem += float64(amountNutrient) / float64(plant.AmountNutrientsRequired)
+	plant.UpdatePlant(plant)
 	return nil
 }
 

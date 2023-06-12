@@ -58,11 +58,11 @@ func NewPlant(context *gin.Context) {
 func AddManyNutrient(context *gin.Context) {
 	//Getting Data
 	if func() bool {
-		id := context.PostForm("id")
+		ids := context.PostForm("id")
 		amount := context.PostForm("amount")
-		return (id == "" || amount == "")
+		return (ids == "[]" || amount == "")
 	}() {
-		context.IndentedJSON(http.StatusBadRequest, nil)
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "Required ids and amount fields"})
 		return
 	}
 
@@ -70,21 +70,21 @@ func AddManyNutrient(context *gin.Context) {
 
 	if err := context.ShouldBind(&plantsNutrientDTO); err != nil {
 		// Bad Request
-		context.IndentedJSON(http.StatusBadRequest, nil)
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "Required ids<[]uint> and amount<uint> fields"})
 		return
 	}
 
 	ids := plantsNutrientDTO.Ids
 	if len(ids) == 0 {
 		// Bad Request
-		context.IndentedJSON(http.StatusBadRequest, nil)
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "Required ids and amount fields"})
 		return
 	}
 
 	amountNutrient := plantsNutrientDTO.Amount
 	if amountNutrient < 0 {
 		// Bad Request
-		context.IndentedJSON(http.StatusBadRequest, nil)
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "The amount field cannot be negative"})
 		return
 	}
 
@@ -101,14 +101,14 @@ func AddManyNutrient(context *gin.Context) {
 
 	if len(plants) == 0 {
 		// Bad Request
-		context.IndentedJSON(http.StatusBadRequest, nil)
+		context.IndentedJSON(http.StatusNotFound, gin.H{"Error": "Plants not found"})
 		return
 	}
 
 	err := Services.AddManyNutrient(plants, uint(amountNutrient))
 	if err != nil {
 		// Bad Request
-		context.IndentedJSON(http.StatusBadRequest, nil)
+		context.IndentedJSON(http.StatusInternalServerError, gin.H{"Error": "Internal Error"})
 		return
 	}
 
@@ -122,7 +122,7 @@ func AddNutrient(context *gin.Context) {
 		amount := context.PostForm("amount")
 		return (id == "" || amount == "")
 	}() {
-		context.IndentedJSON(http.StatusBadRequest, nil)
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "Required id and amount fields"})
 		return
 	}
 
@@ -130,35 +130,35 @@ func AddNutrient(context *gin.Context) {
 
 	if err := context.ShouldBind(&plantNutrientDTO); err != nil {
 		// Bad Request
-		context.IndentedJSON(http.StatusBadRequest, nil)
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "Required id<uint> and amount<uint> fields"})
 		return
 	}
 
 	id := plantNutrientDTO.Id
 	if id < 0 {
 		// Bad Request
-		context.IndentedJSON(http.StatusBadRequest, nil)
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "The id cannot be negative"})
 		return
 	}
 
 	amountNutrient := plantNutrientDTO.Amount
 	if amountNutrient < 0 {
 		// Bad Request
-		context.IndentedJSON(http.StatusBadRequest, nil)
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "The amount cannot be negative"})
 		return
 	}
 
 	plant, err := Services.GetPlant(uint(id))
 	if err != nil {
 		// Bad Request
-		context.IndentedJSON(http.StatusBadRequest, nil)
+		context.IndentedJSON(http.StatusNotFound, gin.H{"Error": "Plant not found"})
 		return
 	}
 
 	err = Services.AddNutrient(plant, uint(amountNutrient))
 	if err != nil {
 		// Bad Request
-		context.IndentedJSON(http.StatusBadRequest, nil)
+		context.IndentedJSON(http.StatusInternalServerError, gin.H{"Error": "Internal Error"})
 		return
 	}
 
