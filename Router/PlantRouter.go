@@ -11,6 +11,7 @@ func PlantRoutes(router *gin.Engine) {
 		plantRouter.GET("/", Api.GetPlants)
 		plantRouter.POST("/", Api.NewPlant)
 		plantRouter.GET("/:id", Api.GetPlant)
-		plantRouter.POST("/nutrients", Api.AddNutrient)
+		plantRouter.POST("/nutrients/add/", Api.AddNutrient)
+		plantRouter.POST("/nutrients/add-many/", Api.AddManyNutrient)
 	}
 }
