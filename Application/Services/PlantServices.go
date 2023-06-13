@@ -2,6 +2,7 @@ package Services
 
 import (
 	"errors"
+	"fmt"
 
 	Entities "proyecto.com/Domain/Entities"
 )
@@ -24,20 +25,14 @@ func NewPlant(plant *Entities.Plant) bool {
 
 	var plantCreated = _plant.NewPlant(plant)
 
-	if !plantCreated {
-		return false
-	}
-	return true
-
+	return plantCreated
 }
 
 func UpdatePlant(plant *Entities.Plant) bool {
 	var _plant Entities.IPlantRepository = Entities.Plant{}
 	isUpdated := _plant.UpdatePlant(plant)
-	if !isUpdated {
-		return false
-	}
-	return true
+
+	return isUpdated
 }
 
 func AddNutrient(plant Entities.Plant, amountNutrient uint) error {
@@ -77,15 +72,68 @@ func AddManyNutrient(plants []Entities.Plant, amountNutrient uint) error {
 	return err
 }
 
-/*
-func AddManyWater(plants []Entities.Plant) []Entities.Plant {
+func AddManyWater(plants []Entities.Plant, amountWater float64) error {
 
+	var err error
+	for _, plant := range plants {
+		err = AddWater(plant, amountWater)
+	}
+	return err
 
-func DecreaseWater() {
-	// Esta funcion recoge a todas las plantas y le agua baja segun lo explicado en el documento
 }
 
-func DecreaseNutrients() {
-	// Esta funcion recoge a todas las plantas y le baja nutrientes segun lo explicado en el documento
+func DecreaseWater() {
+	plants := GetPlants()
 
-}*/
+	for i := range plants {
+		plant := &plants[i]
+
+		if plant.AmountWaterSystem == 0 {
+			//logica para que la planta muera
+			continue
+		} else if plant.AmountWaterSystem > (1 + plant.DegreeSurvival) {
+			excessWater := plant.AmountWaterSystem - (plant.AmountWaterRequired + plant.DegreeSurvival)
+			if excessWater > plant.DegreeSurvival {
+				//logica para obtener el tiempo en el que la planta muere por exceso de agua
+				plant.AmountWaterSystem -= 2 * (1 / float64(plant.DegreeHydration))
+			} else {
+				plant.AmountWaterSystem -= 2 * (1 / float64(plant.DegreeHydration))
+			}
+		} else if plant.AmountWaterSystem < plant.DegreeSurvival {
+			plant.AmountWaterSystem -= 2 * (1 / float64(plant.DegreeHydration))
+		} else {
+			plant.AmountWaterSystem -= 1 / float64(plant.DegreeHydration)
+		}
+
+		if plant.AmountWaterSystem < 0 {
+			plant.AmountWaterSystem = 0
+		}
+
+		UpdatePlant(plant)
+	}
+}
+
+func DecreaseNutrients() error {
+	plants := GetPlants()
+
+	for i := range plants {
+		plant := &plants[i]
+
+		if plant.AmountNutrientsRequired == 0 {
+			continue
+		}
+
+		plant.AmountNutrientsSystem -= 1.0 / float64(plant.AmountNutrientsRequired)
+		if plant.AmountNutrientsSystem < 0 {
+			plant.AmountNutrientsSystem = 0
+		}
+
+		err := UpdatePlant(*plant)
+		if err != nil {
+
+			return fmt.Errorf("error updating plant: %w", err)
+		}
+	}
+
+	return nil
+}
