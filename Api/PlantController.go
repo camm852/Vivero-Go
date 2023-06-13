@@ -33,12 +33,12 @@ func GetPlant(context *gin.Context) {
 }
 
 func NewPlant(context *gin.Context) {
-	var plantDto Entities.PlantDTO
-	if err := context.ShouldBindJSON(&plantDto); err != nil {
+	var newPlantDto dto.NewPlantDTO
+	if err := context.ShouldBindJSON(&newPlantDto); err != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	plant, err := Mappers.MapPlantDtoToPlant(plantDto)
+	plant, err := Mappers.MapNewPlantDtoToPlant(newPlantDto)
 	if err != nil {
 		context.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "Error al mapear los datos"})
 		return
@@ -53,6 +53,48 @@ func NewPlant(context *gin.Context) {
 
 	context.IndentedJSON(http.StatusCreated, gin.H{"msg": "Planta creada correctamente"})
 
+}
+
+func UpdatePlant(context *gin.Context) {
+	var updatePlantDto dto.UpdatePlantDTO
+	if err := context.ShouldBindJSON(&updatePlantDto); err != nil {
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	plant, err := Mappers.MapUpdatePlantDtoToPlant(updatePlantDto)
+	fmt.Println(plant)
+	if err != nil {
+		context.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "Error al mapear los datos"})
+		return
+	}
+
+	var isUpdated = Services.UpdatePlant(plant)
+
+	if !isUpdated {
+		context.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "Error al actualizar la planta"})
+		return
+	}
+
+	context.IndentedJSON(http.StatusCreated, gin.H{"msg": "Planta actualizada correctamente"})
+}
+
+func DeletePlant(context *gin.Context) {
+	var id uint = Utils.ParseUint(context.Param("id"))
+
+	_, error := Services.GetPlant(id)
+
+	if error != nil {
+		context.IndentedJSON(http.StatusNotFound, gin.H{"msg": "No se encontro la planta"})
+		return
+	}
+
+	isDeleted := Services.DeletePlant(id)
+
+	if !isDeleted {
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": "No se pudo eliminar la planta"})
+	}
+
+	context.IndentedJSON(http.StatusOK, gin.H{"msg": "Planta eliminada correctamente"})
 }
 
 func AddManyNutrient(context *gin.Context) {

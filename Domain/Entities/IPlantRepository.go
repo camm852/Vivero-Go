@@ -9,7 +9,7 @@ type IPlantRepository interface {
 	GetPlants() []Plant
 	GetPlant(id uint) (Plant, error)
 	NewPlant(plant *Plant) bool
-	UpdatePlant(plant Plant) bool
+	UpdatePlant(plant *Plant) bool
 	DeletePlant(id uint) bool
 }
 
@@ -42,14 +42,39 @@ func (p Plant) NewPlant(plant *Plant) bool {
 	return true
 }
 
-func (p Plant) UpdatePlant(plant Plant) bool {
-	//var  updated = codigo para actualizar la planta
-	//return updated
-	return false
+func (p Plant) UpdatePlant(plant *Plant) bool {
+	plantFlag, err := p.GetPlant(plant.ID)
+
+	if err != nil {
+		return false
+	}
+
+	plantFlag.Name = plant.Name
+	plantFlag.DegreeSurvival = plant.DegreeSurvival
+	plantFlag.AmountWaterRequired = plant.AmountWaterRequired
+	plantFlag.AmountWaterSystem = plant.AmountWaterSystem
+	plantFlag.DegreeHydration = plant.DegreeHydration
+	plantFlag.AmountNutrientsRequired = plant.AmountNutrientsRequired
+	plantFlag.AmountNutrientsSystem = plant.AmountNutrientsSystem
+	plantFlag.DegreeNutrition = plant.DegreeNutrition
+
+	result := Database.DB.Save(&plantFlag)
+
+	if result.Error != nil {
+		return false
+	}
+
+	return true
 }
 
 func (p Plant) DeletePlant(id uint) bool {
-	//var  updated = codigo para eliminar de la base de datos
-	//return updated
-	return false
+	plant, err := p.GetPlant(id)
+	if err != nil {
+		return false
+	}
+	result := Database.DB.Delete(&plant)
+	if result.Error != nil {
+		return false
+	}
+	return true
 }
