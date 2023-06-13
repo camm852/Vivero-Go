@@ -1,26 +1,50 @@
 package Mappers
 
 import (
+	"proyecto.com/Domain/Dto"
 	"proyecto.com/Domain/Entities"
 	"time"
 )
 
-func MapPlantDtoToPlant(plantDTO Entities.PlantDTO) (*Entities.Plant, error) {
+func MapNewPlantDtoToPlant(newPlantDto dto.NewPlantDTO) (*Entities.Plant, error) {
 
 	// Obtener el tiempo actual
 	now := time.Now()
 
 	// Crear una instancia de Plant y realizar el mapeo directo
 	plant := &Entities.Plant{
-		Name:                    plantDTO.Name,
-		DegreeSurvival:          plantDTO.DegreeSurvival,
-		AmountWaterRequired:     plantDTO.AmountWaterRequired,
-		AmountWaterSystem:       plantDTO.AmountWaterSystem,
-		DegreeHydration:         plantDTO.DegreeHydration,
-		AmountNutrientsRequired: plantDTO.AmountNutrientsRequired,
-		AmountNutrientsSystem:   plantDTO.AmountNutrientsSystem,
-		DegreeNutrition:         plantDTO.DegreeNutrition,
+		Name:                    newPlantDto.Name,
+		DegreeSurvival:          newPlantDto.DegreeSurvival,
+		AmountWaterRequired:     newPlantDto.AmountWaterRequired,
+		AmountWaterSystem:       newPlantDto.AmountWaterSystem,
+		DegreeHydration:         newPlantDto.DegreeHydration,
+		AmountNutrientsRequired: newPlantDto.AmountNutrientsRequired,
+		AmountNutrientsSystem:   newPlantDto.AmountNutrientsSystem,
+		DegreeNutrition:         newPlantDto.DegreeNutrition,
 		Created:                 now,
+		LastUpdate:              now,
+	}
+
+	return plant, nil
+}
+
+func MapUpdatePlantDtoToPlant(updatePlantDto dto.UpdatePlantDTO) (*Entities.Plant, error) {
+
+	// Obtener el tiempo actual
+	now := time.Now()
+
+	// Crear una instancia de Plant y realizar el mapeo directo
+	plant := &Entities.Plant{
+		ID:                      updatePlantDto.ID,
+		Name:                    updatePlantDto.Name,
+		DegreeSurvival:          updatePlantDto.DegreeSurvival,
+		AmountWaterRequired:     updatePlantDto.AmountWaterRequired,
+		AmountWaterSystem:       updatePlantDto.AmountWaterSystem,
+		DegreeHydration:         updatePlantDto.DegreeHydration,
+		AmountNutrientsRequired: updatePlantDto.AmountNutrientsRequired,
+		AmountNutrientsSystem:   updatePlantDto.AmountNutrientsSystem,
+		DegreeNutrition:         updatePlantDto.DegreeNutrition,
+		Created:                 updatePlantDto.Created,
 		LastUpdate:              now,
 	}
 

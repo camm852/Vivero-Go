@@ -1,6 +1,6 @@
-package Entities
+package dto
 
-type PlantDTO struct {
+type NewPlantDTO struct {
 	Name                    string  `json:"name"`
 	DegreeSurvival          float64 `json:"degreeSurvival"`
 	AmountWaterRequired     float64 `json:"amountWaterRequired"`
