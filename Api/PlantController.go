@@ -99,21 +99,12 @@ func DeletePlant(context *gin.Context) {
 
 func AddManyNutrient(context *gin.Context) {
 	//Getting Data
-	if func() bool {
-		ids := context.PostForm("id")
-		amount := context.PostForm("amount")
-		return (ids == "[]" || amount == "")
-	}() {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "Required ids and amount fields"})
-		return
-	}
+	var plantsNutrientDTO dto.PlantsSupplyDTO
 
-	fmt.Println(context.PostForm("ids"))
-	plantsNutrientDTO := dto.PlantsSupplyDTO{}
-
-	if err := context.ShouldBind(&plantsNutrientDTO); err != nil {
+	if err := context.ShouldBindJSON(&plantsNutrientDTO); err != nil {
 		// Bad Request
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "Required ids<[]uint> and amount<uint> fields"})
+		fmt.Println(err.Error())
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
 		return
 	}
 
@@ -132,8 +123,8 @@ func AddManyNutrient(context *gin.Context) {
 	}
 
 	plants := func() (plants []Entities.Plant) {
-		for _, plant := range plants {
-			plantFinded, err := Services.GetPlant(plant.ID)
+		for id := range plantsNutrientDTO.Ids {
+			plantFinded, err := Services.GetPlant(uint(id))
 			if err != nil {
 				continue
 			}
@@ -210,18 +201,9 @@ func AddNutrient(context *gin.Context) {
 
 func AddManyWater(context *gin.Context) {
 	//Getting Data
-	if func() bool {
-		ids := context.PostForm("id")
-		amount := context.PostForm("amount")
-		return (ids == "[]" || amount == "")
-	}() {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "Required ids and amount fields"})
-		return
-	}
-
 	plantsWaterDTO := dto.PlantsSupplyDTO{}
 
-	if err := context.ShouldBind(&plantsWaterDTO); err != nil {
+	if err := context.ShouldBindJSON(&plantsWaterDTO); err != nil {
 		// Bad Request
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "Required ids<[]uint> and amount<uint> fields"})
 		return
@@ -242,8 +224,8 @@ func AddManyWater(context *gin.Context) {
 	}
 
 	plants := func() (plants []Entities.Plant) {
-		for _, plant := range plants {
-			plantFinded, err := Services.GetPlant(plant.ID)
+		for id := range plantsWaterDTO.Ids {
+			plantFinded, err := Services.GetPlant(uint(id))
 			if err != nil {
 				continue
 			}
@@ -315,5 +297,5 @@ func AddWater(context *gin.Context) {
 		return
 	}
 
-	context.IndentedJSON(http.StatusOK, nil)
+	context.IndentedJSON(http.StatusOK, gin.H{})
 }
