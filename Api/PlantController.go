@@ -14,7 +14,6 @@ import (
 )
 
 func GetPlants(context *gin.Context) {
-	fmt.Println("HOla mundo")
 	var plants []Entities.Plant = Services.GetPlants()
 
 	context.IndentedJSON(http.StatusOK, plants)
@@ -35,19 +34,19 @@ func GetPlant(context *gin.Context) {
 func NewPlant(context *gin.Context) {
 	var newPlantDto dto.NewPlantDTO
 	if err := context.ShouldBindJSON(&newPlantDto); err != nil {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
 		return
 	}
 	plant, err := Mappers.MapNewPlantDtoToPlant(newPlantDto)
 	if err != nil {
-		context.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "Error al mapear los datos"})
+		context.IndentedJSON(http.StatusInternalServerError, gin.H{"msg": "Error al mapear los datos"})
 		return
 	}
 
 	var isCreated = Services.NewPlant(plant)
 
 	if !isCreated {
-		context.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "Error al crear la planta"})
+		context.IndentedJSON(http.StatusInternalServerError, gin.H{"msg": "Error al crear la planta"})
 		return
 	}
 
@@ -64,14 +63,14 @@ func UpdatePlant(context *gin.Context) {
 	plant, err := Mappers.MapUpdatePlantDtoToPlant(updatePlantDto)
 	fmt.Println(plant)
 	if err != nil {
-		context.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "Error al mapear los datos"})
+		context.IndentedJSON(http.StatusInternalServerError, gin.H{"msg": "Error al mapear los datos"})
 		return
 	}
 
 	var isUpdated = Services.UpdatePlant(plant)
 
 	if !isUpdated {
-		context.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "Error al actualizar la planta"})
+		context.IndentedJSON(http.StatusInternalServerError, gin.H{"msg": "Error al actualizar la planta"})
 		return
 	}
 
@@ -97,205 +96,213 @@ func DeletePlant(context *gin.Context) {
 	context.IndentedJSON(http.StatusOK, gin.H{"msg": "Planta eliminada correctamente"})
 }
 
-func AddManyNutrient(context *gin.Context) {
-	//Getting Data
-	var plantsNutrientDTO dto.PlantsSupplyDTO
-
-	if err := context.ShouldBindJSON(&plantsNutrientDTO); err != nil {
-		// Bad Request
-		fmt.Println(err.Error())
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
-		return
-	}
-
-	ids := plantsNutrientDTO.Ids
-	if len(ids) == 0 {
-		// Bad Request
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "Required ids and amount fields"})
-		return
-	}
-
-	amountNutrient := plantsNutrientDTO.Amount
-	if amountNutrient < 0 {
-		// Bad Request
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "The amount field cannot be negative"})
-		return
-	}
-
-	plants := func() (plants []Entities.Plant) {
-		for id := range plantsNutrientDTO.Ids {
-			plantFinded, err := Services.GetPlant(uint(id))
-			if err != nil {
-				continue
-			}
-			plants = append(plants, plantFinded)
-		}
-		return plants
-	}()
-
-	if len(plants) == 0 {
-		// Bad Request
-		context.IndentedJSON(http.StatusNotFound, gin.H{"Error": "Plants not found"})
-		return
-	}
-
-	err := Services.AddManyNutrient(plants, uint(amountNutrient))
-	if err != nil {
-		// Bad Request
-		context.IndentedJSON(http.StatusInternalServerError, gin.H{"Error": "Internal Error"})
-		return
-	}
-
-	context.IndentedJSON(http.StatusOK, nil)
-}
-
 func AddNutrient(context *gin.Context) {
 	//Getting Data
+	var plantNutrientDTO dto.PlantNutrientSupplyDTO
 	if func() bool {
-		id := context.PostForm("id")
-		amount := context.PostForm("amount")
-		return (id == "" || amount == "")
+		if err := context.ShouldBindJSON(&plantNutrientDTO); err != nil {
+			context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
+			return true
+		}
+		return false
 	}() {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "Required id and amount fields"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": "Required id and amount fields"})
 		return
 	}
-
-	plantNutrientDTO := dto.PlantSupplyDTO{}
 
 	if err := context.ShouldBind(&plantNutrientDTO); err != nil {
 		// Bad Request
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "Required id<uint> and amount<uint> fields"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": "Required id<uint> and amount<uint> fields"})
 		return
 	}
 
 	id := plantNutrientDTO.Id
 	if id < 0 {
 		// Bad Request
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "The id cannot be negative"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": "The id cannot be negative"})
 		return
 	}
 
 	amountNutrient := plantNutrientDTO.Amount
 	if amountNutrient < 0 {
 		// Bad Request
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "The amount cannot be negative"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": "The amount cannot be negative"})
 		return
 	}
 
 	plant, err := Services.GetPlant(uint(id))
 	if err != nil {
 		// Bad Request
-		context.IndentedJSON(http.StatusNotFound, gin.H{"Error": "Plant not found"})
+		context.IndentedJSON(http.StatusNotFound, gin.H{"msg": "Plant not found"})
 		return
 	}
 
 	err = Services.AddNutrient(plant, uint(amountNutrient))
 	if err != nil {
 		// Bad Request
-		context.IndentedJSON(http.StatusInternalServerError, gin.H{"Error": "Internal Error"})
+		context.IndentedJSON(http.StatusInternalServerError, gin.H{"msg": "Internal Error"})
 		return
 	}
 
-	context.IndentedJSON(http.StatusOK, nil)
+	context.IndentedJSON(http.StatusOK, gin.H{"msg": "Added successfully"})
 }
 
-func AddManyWater(context *gin.Context) {
+func AddManyNutrient(context *gin.Context) {
 	//Getting Data
-	plantsWaterDTO := dto.PlantsSupplyDTO{}
+	var plantsNutrientDTO dto.PlantsNutrientSupplyDTO
 
-	if err := context.ShouldBindJSON(&plantsWaterDTO); err != nil {
+	if err := context.ShouldBindJSON(&plantsNutrientDTO); err != nil {
 		// Bad Request
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "Required ids<[]uint> and amount<uint> fields"})
+		fmt.Println(err.Error())
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
 		return
 	}
-
-	ids := plantsWaterDTO.Ids
+	fmt.Println(plantsNutrientDTO)
+	ids := plantsNutrientDTO.Ids
 	if len(ids) == 0 {
 		// Bad Request
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "Required ids and amount fields"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": "Required ids and amount fields"})
 		return
 	}
 
-	amountWater := plantsWaterDTO.Amount
-	if amountWater < 0 {
+	amountNutrient := plantsNutrientDTO.Amount
+	if amountNutrient < 0 {
 		// Bad Request
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "The amount field cannot be negative"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": "The amount field cannot be negative"})
 		return
 	}
 
 	plants := func() (plants []Entities.Plant) {
-		for id := range plantsWaterDTO.Ids {
-			plantFinded, err := Services.GetPlant(uint(id))
+		for _, id := range plantsNutrientDTO.Ids {
+			plantStored, err := Services.GetPlant(uint(id))
 			if err != nil {
 				continue
 			}
-			plants = append(plants, plantFinded)
+			plants = append(plants, plantStored)
 		}
 		return plants
 	}()
-
+	fmt.Println(plants)
 	if len(plants) == 0 {
 		// Bad Request
-		context.IndentedJSON(http.StatusNotFound, gin.H{"Error": "Plants not found"})
+		context.IndentedJSON(http.StatusNotFound, gin.H{"msg": "Plants not found"})
 		return
 	}
 
-	err := Services.AddManyWater(plants, float64(amountWater))
+	err := Services.AddManyNutrient(plants, uint(amountNutrient))
 	if err != nil {
 		// Bad Request
-		context.IndentedJSON(http.StatusInternalServerError, gin.H{"Error": "Internal Error"})
+		context.IndentedJSON(http.StatusInternalServerError, gin.H{"msg": "Internal Error"})
 		return
 	}
 
-	context.IndentedJSON(http.StatusOK, nil)
+	context.IndentedJSON(http.StatusOK, gin.H{"msg": "Added successfully"})
 }
 
 func AddWater(context *gin.Context) {
 	//Getting Data
+	var plantWatertDTO dto.PlantWaterSupplyDTO
 	if func() bool {
-		id := context.PostForm("id")
-		amount := context.PostForm("amount")
-		return (id == "" || amount == "")
+		if err := context.ShouldBindJSON(&plantWatertDTO); err != nil {
+			context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
+			return true
+		}
+		return false
 	}() {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "Required id and amount fields"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": "Required id and amount fields"})
 		return
 	}
 
-	plantWatertDTO := dto.PlantSupplyDTO{}
-
 	if err := context.ShouldBind(&plantWatertDTO); err != nil {
 		// Bad Request
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "Required id<uint> and amount<uint> fields"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": "Required id<uint> and amount<uint> fields"})
 		return
 	}
 
 	id := plantWatertDTO.Id
 	if id < 0 {
 		// Bad Request
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "The id cannot be negative"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": "The id cannot be negative"})
 		return
 	}
 
 	amountWater := plantWatertDTO.Amount
 	if amountWater < 0 {
 		// Bad Request
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "The amount cannot be negative"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": "The amount cannot be negative"})
+		return
+	}
+	if amountWater > 1 {
+		// Bad Request
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": "The amount cannot be greater than one"})
 		return
 	}
 
 	plant, err := Services.GetPlant(uint(id))
 	if err != nil {
 		// Bad Request
-		context.IndentedJSON(http.StatusNotFound, gin.H{"Error": "Plant not found"})
+		context.IndentedJSON(http.StatusNotFound, gin.H{"msg": "Plant not found"})
 		return
 	}
 
 	err = Services.AddWater(plant, float64(amountWater))
 	if err != nil {
 		// Bad Request
-		context.IndentedJSON(http.StatusInternalServerError, gin.H{"Error": "Internal Error"})
+		context.IndentedJSON(http.StatusInternalServerError, gin.H{"msg": "Internal Error"})
 		return
 	}
 
-	context.IndentedJSON(http.StatusOK, gin.H{})
+	context.IndentedJSON(http.StatusOK, gin.H{"msg": "Added successfully"})
+}
+
+func AddManyWater(context *gin.Context) {
+	//Getting Data
+	plantsWaterDTO := dto.PlantsWaterSupplyDTO{}
+
+	if err := context.ShouldBindJSON(&plantsWaterDTO); err != nil {
+		// Bad Request
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": "Required ids<[]uint> and amount<uint> fields"})
+		return
+	}
+
+	ids := plantsWaterDTO.Ids
+	if len(ids) == 0 {
+		// Bad Request
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": "Required ids and amount fields"})
+		return
+	}
+
+	amountWater := plantsWaterDTO.Amount
+	if amountWater < 0 {
+		// Bad Request
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": "The amount field cannot be negative"})
+		return
+	}
+
+	plants := func() (plants []Entities.Plant) {
+		var plantsStored []Entities.Plant
+		for _, id := range plantsWaterDTO.Ids {
+			plantStored, err := Services.GetPlant(uint(id))
+			if err != nil {
+				continue
+			}
+			plantsStored = append(plantsStored, plantStored)
+		}
+		return plantsStored
+	}()
+
+	if len(plants) == 0 {
+		// Bad Request
+		context.IndentedJSON(http.StatusNotFound, gin.H{"msg": "Plants not found"})
+		return
+	}
+
+	err := Services.AddManyWater(plants, float64(amountWater))
+	if err != nil {
+		// Bad Request
+		context.IndentedJSON(http.StatusInternalServerError, gin.H{"msg": "Internal Error"})
+		return
+	}
+
+	context.IndentedJSON(http.StatusOK, gin.H{"msg": "Added successfully"})
 }

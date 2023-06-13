@@ -48,6 +48,7 @@ func AddWater(plant Entities.Plant, amountWater float64) error {
 		return errors.New("Division by zero")
 	}
 	plant.AmountWaterSystem += float64(amountWater) / float64(plant.AmountWaterRequired)
+	plant.UpdatePlant(&plant)
 	return nil
 }
 

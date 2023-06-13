@@ -1,7 +1,9 @@
 version: '1'
 services:
   api:
-    image: camm852/vivero-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: vivero
     ports:
       - 5000:5000
