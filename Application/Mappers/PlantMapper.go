@@ -16,10 +16,10 @@ func MapNewPlantDtoToPlant(newPlantDto dto.NewPlantDTO) (*Entities.Plant, error)
 		Name:                    newPlantDto.Name,
 		DegreeSurvival:          newPlantDto.DegreeSurvival,
 		AmountWaterRequired:     newPlantDto.AmountWaterRequired,
-		AmountWaterSystem:       1,
+		AmountWaterSystem:       1 + newPlantDto.DegreeSurvival,
 		DegreeHydration:         newPlantDto.DegreeHydration,
 		AmountNutrientsRequired: newPlantDto.AmountNutrientsRequired,
-		AmountNutrientsSystem:   1,
+		AmountNutrientsSystem:   1 + newPlantDto.DegreeSurvival,
 		DegreeNutrition:         newPlantDto.DegreeNutrition,
 		Created:                 now,
 		LastUpdate:              now,
@@ -44,7 +44,6 @@ func MapUpdatePlantDtoToPlant(updatePlantDto dto.UpdatePlantDTO) (*Entities.Plan
 		AmountNutrientsRequired: updatePlantDto.AmountNutrientsRequired,
 		AmountNutrientsSystem:   updatePlantDto.AmountNutrientsSystem,
 		DegreeNutrition:         updatePlantDto.DegreeNutrition,
-		Created:                 updatePlantDto.Created,
 		LastUpdate:              now,
 	}
 

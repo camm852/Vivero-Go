@@ -1,7 +1,6 @@
 package Entities
 
 import (
-	"fmt"
 	"proyecto.com/Infraestructure/Database"
 )
 
@@ -33,8 +32,6 @@ func (p Plant) NewPlant(plant *Plant) bool {
 	createdPlant := Database.DB.Create(plant)
 
 	err := createdPlant.Error
-
-	fmt.Println(err)
 
 	if err != nil {
 		return false
