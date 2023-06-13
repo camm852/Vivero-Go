@@ -2,7 +2,6 @@ package Services
 
 import (
 	"errors"
-	"fmt"
 
 	Entities "proyecto.com/Domain/Entities"
 )
@@ -128,11 +127,13 @@ func DecreaseNutrients() error {
 			plant.AmountNutrientsSystem = 0
 		}
 
-		err := UpdatePlant(*plant)
-		if err != nil {
+		/*
+			err := UpdatePlant(&plant)
+			if err != nil {
 
-			return fmt.Errorf("error updating plant: %w", err)
-		}
+				return fmt.Errorf("error updating plant: %w", err)
+			}
+		*/
 	}
 
 	return nil
