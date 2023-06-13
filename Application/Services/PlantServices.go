@@ -77,10 +77,17 @@ func AddManyNutrient(plants []Entities.Plant, amountNutrient uint) error {
 	return err
 }
 
+func AddManyWater(plants []Entities.Plant, amountWater float64) error {
+
+	var err error
+	for _, plant := range plants {
+		err = AddWater(plant, amountWater)
+	}
+	return err
+
+}
+
 /*
-func AddManyWater(plants []Entities.Plant) []Entities.Plant {
-
-
 func DecreaseWater() {
 	// Esta funcion recoge a todas las plantas y le agua baja segun lo explicado en el documento
 }
