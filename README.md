@@ -19,12 +19,13 @@ Each plant has the following properties:
 | AmountNutrientsRequired | Represents the amount of nutrients required for the plant to have 100% nutrients in the system and be fully satisfied. Unit: milligrams (mg) |
 | AmountNutrientsSystem | A value ranging from 0 to 100%, where the value decreases over time. This value decreases by 1/Y for each unit of time elapsed, where Y is the plant's nutrition level. The 100% level is reached when the required amount of nutrients is met.
 | DegreeNutrition | A value between 60 and 100, where a lower value indicates faster nutrient loss, and a higher value indicates slower nutrient loss, allowing the plant to resist without requiring nutrients for a longer time.
+| Created | Date of the creation.
 | LastUpdate | Date of the last update.
 
-## Posibles casos
+# Possible cases 
 
-Case 1:
+## Case 1:
+In this case, the plant has an adequate supply of water and nutrients, but no additional water or nutrients are added. Every second, the plant loses 0.02% of water and 0.016% of nutrients. After 5000 seconds (approximately 83.3 minutes or 1.38 hours), the plant's water level reaches 0%. However, due to its 20% survival factor, the plant can withstand a little longer without water, acting as if it still has 20% of water in its system. With double the rate of loss, it would have 500 seconds (approximately 8.3 minutes) before the plant dies due to water depletion.
 
-Case 2:
-
-Case 3:
+## Case 2:
+In this case, an additional 30% of water is added to the plant, even though it already has 100% of its required amount (which is equivalent to 0.2 liters). The plant has a 20% survival factor. Therefore, it has 500 seconds (approximately 8.3 minutes) to eliminate the excess water and reach 100%. However, the added excess amount is 0.06 liters, which would actually take 750 seconds (approximately 12.5 minutes) to remove. Consequently, the plant fails to survive due to excessive water quantity.
