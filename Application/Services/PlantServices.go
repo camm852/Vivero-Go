@@ -14,7 +14,6 @@ func GetPlants() []Entities.Plant {
 }
 
 func GetPlant(id uint) (Entities.Plant, error) {
-	//logica para encontrarlo
 	var _plant Entities.IPlantRepository = Entities.Plant{}
 	plant, err := _plant.GetPlant(id)
 	return plant, err
@@ -40,6 +39,18 @@ func AddNutrient(plant Entities.Plant, amountNutrient uint) error {
 	plant.UpdatePlant(plant)
 	return nil
 }
+
+
+func DeletePlant(id uint) bool {
+	var _plant Entities.IPlantRepository = Entities.Plant{}
+	Plant2Delete, err := _plant.GetPlant(id)
+
+	if err != nil {
+		return false
+	} else {
+		_plant.DeletePlant(Plant2Delete.ID)
+		return true
+	}
 
 func AddManyNutrient(plants []Entities.Plant, amountNutrient uint) error {
 	var err error
