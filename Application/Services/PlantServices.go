@@ -14,7 +14,6 @@ func GetPlants() []Entities.Plant {
 }
 
 func GetPlant(id uint) (Entities.Plant, error) {
-	//logica para encontrarlo
 	var _plant Entities.IPlantRepository = Entities.Plant{}
 	plant, err := _plant.GetPlant(id)
 	return plant, err
@@ -54,13 +53,16 @@ func UpdatePlant(plant Entities.Plant) bool {
 	return true
 }
 
-func AddNutrients(plant Entities.Plant, amountNutrients uint) error {
+
+func AddNutrient(plant Entities.Plant, amountNutrient uint) error {
 	if plant.AmountNutrientsRequired == 0 {
 		return errors.New("Division by zero")
 	}
-	plant.AmountNutrientsSystem += float64(amountNutrients) / float64(plant.AmountNutrientsRequired)
+	plant.AmountNutrientsSystem += float64(amountNutrient) / float64(plant.AmountNutrientsRequired)
+	plant.UpdatePlant(plant)
 	return nil
 }
+
 
 func AddWater(plant Entities.Plant, amountWater float64) error {
 	if plant.AmountWaterRequired == 0 {
@@ -68,6 +70,30 @@ func AddWater(plant Entities.Plant, amountWater float64) error {
 	}
 	plant.AmountWaterSystem += float64(amountWater) / float64(plant.AmountWaterRequired)
 	return nil
+}
+
+func DeletePlant(id uint) bool {
+	var _plant Entities.IPlantRepository = Entities.Plant{}
+	Plant2Delete, err := _plant.GetPlant(id)
+
+	if err != nil {
+		return false
+	} else {
+		_plant.DeletePlant(Plant2Delete.ID)
+		return true
+	}
+}
+  
+func AddManyNutrient(plants []Entities.Plant, amountNutrient uint) error {
+	var err error
+	for _, plant := range plants {
+		err = AddNutrient(plant, amountNutrient)
+	}
+	return err
+}
+
+/*func UpdatePlant(plant Entities.Plant) bool {
+
 }
 
 /*
