@@ -1,12 +1,13 @@
 package Database
 
 import (
+	"log"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
 )
 
-var DSN = "host=localhost user= root password=root dbname=vivero port=5432"
+var DSN = "host=postgres user=root password=root dbname=vivero port=5432"
 var DB *gorm.DB
 
 func Connection() {
