@@ -54,6 +54,7 @@ func (p Plant) UpdatePlant(plant *Plant) bool {
 	plantFlag.AmountNutrientsRequired = plant.AmountNutrientsRequired
 	plantFlag.AmountNutrientsSystem = plant.AmountNutrientsSystem
 	plantFlag.DegreeNutrition = plant.DegreeNutrition
+	plantFlag.LastUpdate = plant.LastUpdate
 
 	result := Database.DB.Save(&plantFlag)
 
