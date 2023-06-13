@@ -31,6 +31,29 @@ func NewPlant(plant *Entities.Plant) bool {
 
 }
 
+func UpdatePlant(plant Entities.Plant) bool {
+	plantFlag, err := GetPlant(plant.ID)
+
+	if err != nil {
+		return false
+	}
+
+	plantFlag.Name = plant.Name
+	plantFlag.DegreeSurvival = plant.DegreeSurvival
+	plantFlag.AmountWaterRequired = plant.AmountWaterRequired
+	plantFlag.AmountWaterSystem = plant.AmountWaterSystem
+	plantFlag.DegreeHydration = plant.DegreeHydration
+	plantFlag.AmountNutrientsRequired = plant.AmountNutrientsRequired
+	plantFlag.AmountNutrientsSystem = plant.AmountNutrientsSystem
+	plantFlag.DegreeNutrition = plant.DegreeNutrition
+	plantFlag.LastUpdate = plant.Created
+
+	// todo lo que esta aqui deberia estar en IPlantRepository en la funcion update
+
+	return true
+}
+
+
 func AddNutrient(plant Entities.Plant, amountNutrient uint) error {
 	if plant.AmountNutrientsRequired == 0 {
 		return errors.New("Division by zero")
@@ -40,6 +63,14 @@ func AddNutrient(plant Entities.Plant, amountNutrient uint) error {
 	return nil
 }
 
+
+func AddWater(plant Entities.Plant, amountWater float64) error {
+	if plant.AmountWaterRequired == 0 {
+		return errors.New("Division by zero")
+	}
+	plant.AmountWaterSystem += float64(amountWater) / float64(plant.AmountWaterRequired)
+	return nil
+}
 
 func DeletePlant(id uint) bool {
 	var _plant Entities.IPlantRepository = Entities.Plant{}
@@ -51,7 +82,8 @@ func DeletePlant(id uint) bool {
 		_plant.DeletePlant(Plant2Delete.ID)
 		return true
 	}
-
+}
+  
 func AddManyNutrient(plants []Entities.Plant, amountNutrient uint) error {
 	var err error
 	for _, plant := range plants {
@@ -64,11 +96,9 @@ func AddManyNutrient(plants []Entities.Plant, amountNutrient uint) error {
 
 }
 
+/*
+
 func DeletePlant(id uint) bool {
-
-}
-
-func AddWater(plant Entities.Plant) Entities.Plant {
 
 }
 
