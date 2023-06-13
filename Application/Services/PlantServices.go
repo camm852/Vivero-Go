@@ -2,8 +2,6 @@ package Services
 
 import (
 	"errors"
-	"fmt"
-
 	Entities "proyecto.com/Domain/Entities"
 )
 
@@ -113,27 +111,33 @@ func DecreaseWater() {
 	}
 }
 
-func DecreaseNutrients() error {
+func DecreaseNutrients() {
 	plants := GetPlants()
 
 	for i := range plants {
 		plant := &plants[i]
 
-		if plant.AmountNutrientsRequired == 0 {
+		if plant.AmountNutrientsSystem == 0 {
+			//logica para que la planta muera
 			continue
+		} else if plant.AmountNutrientsSystem > (1 + plant.DegreeSurvival) {
+			excessNutrients := plant.AmountNutrientsSystem - (plant.AmountWaterRequired + plant.DegreeSurvival)
+			if excessNutrients > plant.DegreeSurvival {
+				//logica para obtener el tiempo en el que la planta muere por exceso de agua
+				plant.AmountNutrientsSystem -= 2 * (1 / float64(plant.DegreeHydration))
+			} else {
+				plant.AmountNutrientsSystem -= 2 * (1 / float64(plant.DegreeHydration))
+			}
+		} else if plant.AmountNutrientsSystem < plant.DegreeSurvival {
+			plant.AmountNutrientsSystem -= 2 * (1 / float64(plant.DegreeHydration))
+		} else {
+			plant.AmountNutrientsSystem -= 1 / float64(plant.DegreeHydration)
 		}
 
-		plant.AmountNutrientsSystem -= 1.0 / float64(plant.AmountNutrientsRequired)
 		if plant.AmountNutrientsSystem < 0 {
 			plant.AmountNutrientsSystem = 0
 		}
 
-		err := UpdatePlant(*plant)
-		if err != nil {
-
-			return fmt.Errorf("error updating plant: %w", err)
-		}
+		UpdatePlant(plant)
 	}
-
-	return nil
 }
