@@ -1,5 +1,7 @@
 # Software Application in GO (Golang)
 
+# VIVERO
+
 Development of a server-side software application that provides an API to consume a series of services for a nursery.
 
 The application simulates the behavior and growth of plants as they are fed and cared for in different ways. This allows for experimental testing without affecting actual plants. Each plant has unique properties and reacts differently to varying conditions.
@@ -29,3 +31,19 @@ In this case, the plant has an adequate supply of water and nutrients, but no ad
 
 ## Case 2:
 In this case, an additional 30% of water is added to the plant, even though it already has 100% of its required amount (which is equivalent to 0.2 liters). The plant has a 20% survival factor. Therefore, it has 500 seconds (approximately 8.3 minutes) to eliminate the excess water and reach 100%. However, the added excess amount is 0.06 liters, which would actually take 750 seconds (approximately 12.5 minutes) to remove. Consequently, the plant fails to survive due to excessive water quantity.
+
+
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file
+
+`DB_HOST`: host database
+
+`DB_USER` : user database
+
+`DB_PASSWORD`: password database
+
+`DB_PORT`: database port
+
+The credentials are for a postgres database.
+You can find the sql in the root of the project.
