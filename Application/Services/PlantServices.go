@@ -31,11 +31,44 @@ func NewPlant(plant *Entities.Plant) bool {
 
 }
 
-func AddNutrients(plant Entities.Plant, amountNutrients uint) error {
+func UpdatePlant(plant Entities.Plant) bool {
+	plantFlag, err := GetPlant(plant.ID)
+
+	if err != nil {
+		return false
+	}
+
+	plantFlag.Name = plant.Name
+	plantFlag.DegreeSurvival = plant.DegreeSurvival
+	plantFlag.AmountWaterRequired = plant.AmountWaterRequired
+	plantFlag.AmountWaterSystem = plant.AmountWaterSystem
+	plantFlag.DegreeHydration = plant.DegreeHydration
+	plantFlag.AmountNutrientsRequired = plant.AmountNutrientsRequired
+	plantFlag.AmountNutrientsSystem = plant.AmountNutrientsSystem
+	plantFlag.DegreeNutrition = plant.DegreeNutrition
+	plantFlag.LastUpdate = plant.Created
+
+	// todo lo que esta aqui deberia estar en IPlantRepository en la funcion update
+
+	return true
+}
+
+
+func AddNutrient(plant Entities.Plant, amountNutrient uint) error {
 	if plant.AmountNutrientsRequired == 0 {
 		return errors.New("Division by zero")
 	}
-	plant.AmountNutrientsSystem += float64(amountNutrients) / float64(plant.AmountNutrientsRequired)
+	plant.AmountNutrientsSystem += float64(amountNutrient) / float64(plant.AmountNutrientsRequired)
+	plant.UpdatePlant(plant)
+	return nil
+}
+
+
+func AddWater(plant Entities.Plant, amountWater float64) error {
+	if plant.AmountWaterRequired == 0 {
+		return errors.New("Division by zero")
+	}
+	plant.AmountWaterSystem += float64(amountWater) / float64(plant.AmountWaterRequired)
 	return nil
 }
 
@@ -50,16 +83,22 @@ func DeletePlant(id uint) bool {
 		return true
 	}
 }
+  
+func AddManyNutrient(plants []Entities.Plant, amountNutrient uint) error {
+	var err error
+	for _, plant := range plants {
+		err = AddNutrient(plant, amountNutrient)
+	}
+	return err
+}
 
 /*func UpdatePlant(plant Entities.Plant) bool {
 
 }
 
+/*
+
 func DeletePlant(id uint) bool {
-
-}
-
-func AddWater(plant Entities.Plant) Entities.Plant {
 
 }
 
