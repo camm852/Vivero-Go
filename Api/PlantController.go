@@ -108,6 +108,7 @@ func AddManyNutrient(context *gin.Context) {
 		return
 	}
 
+	fmt.Println(context.PostForm("ids"))
 	plantsNutrientDTO := dto.PlantsSupplyDTO{}
 
 	if err := context.ShouldBind(&plantsNutrientDTO); err != nil {
