@@ -31,13 +31,15 @@ func NewPlant(plant *Entities.Plant) bool {
 
 }
 
-func AddNutrients(plant Entities.Plant, amountNutrients uint) error {
+func AddNutrient(plant Entities.Plant, amountNutrient uint) error {
 	if plant.AmountNutrientsRequired == 0 {
 		return errors.New("Division by zero")
 	}
-	plant.AmountNutrientsSystem += float64(amountNutrients) / float64(plant.AmountNutrientsRequired)
+	plant.AmountNutrientsSystem += float64(amountNutrient) / float64(plant.AmountNutrientsRequired)
+	plant.UpdatePlant(plant)
 	return nil
 }
+
 
 func DeletePlant(id uint) bool {
 	var _plant Entities.IPlantRepository = Entities.Plant{}
@@ -49,6 +51,13 @@ func DeletePlant(id uint) bool {
 		_plant.DeletePlant(Plant2Delete.ID)
 		return true
 	}
+
+func AddManyNutrient(plants []Entities.Plant, amountNutrient uint) error {
+	var err error
+	for _, plant := range plants {
+		err = AddNutrient(plant, amountNutrient)
+	}
+	return err
 }
 
 /*func UpdatePlant(plant Entities.Plant) bool {
