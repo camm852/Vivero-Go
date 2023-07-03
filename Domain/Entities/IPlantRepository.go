@@ -46,6 +46,16 @@ func (p Plant) UpdatePlant(plant *Plant) bool {
 		return false
 	}
 
+	plantStored, errGet := p.GetPlant(plant.ID)
+
+	if errGet != nil {
+		return false
+	}
+
+	if plantStored.IsDead {
+		return false
+	}
+
 	plantFlag.Name = plant.Name
 	plantFlag.DegreeSurvival = plant.DegreeSurvival
 	plantFlag.AmountWaterRequired = plant.AmountWaterRequired
@@ -55,6 +65,7 @@ func (p Plant) UpdatePlant(plant *Plant) bool {
 	plantFlag.AmountNutrientsSystem = plant.AmountNutrientsSystem
 	plantFlag.DegreeNutrition = plant.DegreeNutrition
 	plantFlag.LastUpdate = plant.LastUpdate
+	plantFlag.IsDead = plant.IsDead
 
 	result := Database.DB.Save(&plantFlag)
 
