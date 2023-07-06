@@ -5,8 +5,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"os"
+	"proyecto.com/Application/Services"
 	"proyecto.com/Infraestructure/Database"
 	"proyecto.com/Router"
+	"time"
 )
 
 func main() {
@@ -20,5 +22,15 @@ func main() {
 	router := gin.Default()
 	Router.PlantRoutes(router)
 
+	go decreaseNutrientsAndWater()
+
 	router.Run(":5000")
+}
+
+func decreaseNutrientsAndWater() {
+	for {
+		time.Sleep(time.Second * 2)
+		Services.DecreaseLife()
+		fmt.Println("Decresio")
+	}
 }

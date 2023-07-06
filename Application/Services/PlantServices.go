@@ -29,7 +29,6 @@ func NewPlant(plant *Entities.Plant) bool { //Hugo
 func UpdatePlant(plant *Entities.Plant) bool { //Martin
 	var _plant Entities.IPlantRepository = Entities.Plant{}
 	isUpdated := _plant.UpdatePlant(plant)
-
 	return isUpdated
 }
 
@@ -81,20 +80,30 @@ func AddManyWater(plants []Entities.Plant, amountWater float64) error { //Hugo
 
 }
 
+func DecreaseLife() {
+	DecreaseWater()
+	DecreaseNutrients()
+}
+
 func DecreaseWater() { // Martin
+
 	plants := GetPlants()
 
 	for i := range plants {
+		if plants[i].IsDead {
+			continue
+		}
+
 		plant := &plants[i]
 
 		if plant.AmountWaterSystem == 0 {
-			//logica para que la planta muera
+			plant.IsDead = true
+			UpdatePlant(plant)
 			continue
 		} else if plant.AmountWaterSystem > (1 + plant.DegreeSurvival) {
-			excessWater := plant.AmountWaterSystem - (plant.AmountWaterRequired + plant.DegreeSurvival)
+			excessWater := plant.AmountWaterSystem - (1 + plant.DegreeSurvival)
 			if excessWater > plant.DegreeSurvival {
-				//logica para obtener el tiempo en el que la planta muere por exceso de agua
-				plant.AmountWaterSystem -= 2 * (1 / float64(plant.DegreeHydration))
+				plant.IsDead = true
 			} else {
 				plant.AmountWaterSystem -= 2 * (1 / float64(plant.DegreeHydration))
 			}
@@ -116,21 +125,24 @@ func DecreaseNutrients() { //Hugo
 	plants := GetPlants()
 
 	for i := range plants {
+		if plants[i].IsDead {
+			continue
+		}
 		plant := &plants[i]
 
 		if plant.AmountNutrientsSystem == 0 {
-			//logica para que la planta muera
+			plant.IsDead = true
+			UpdatePlant(plant)
 			continue
 		} else if plant.AmountNutrientsSystem < plant.DegreeSurvival {
-			plant.AmountNutrientsSystem -= 2 * (1 / float64(plant.DegreeHydration))
+			plant.AmountNutrientsSystem -= 2 * (1 / float64(plant.DegreeNutrition))
 		} else {
-			plant.AmountNutrientsSystem -= 1 / float64(plant.DegreeHydration)
+			plant.AmountNutrientsSystem -= 1 / float64(plant.DegreeNutrition)
 		}
 
 		if plant.AmountNutrientsSystem < 0 {
 			plant.AmountNutrientsSystem = 0
 		}
-
 		UpdatePlant(plant)
 	}
 }

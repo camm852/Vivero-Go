@@ -12,6 +12,7 @@ CREATE TABLE plants (
     amount_nutrients_required INT,
     amount_nutrients_system FLOAT,
     degree_nutrition INT,
+    is_dead BOOLEAN,
     created TIMESTAMPTZ DEFAULT current_timestamp,
     last_update TIMESTAMPTZ DEFAULT current_timestamp
 );
