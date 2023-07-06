@@ -2,6 +2,7 @@ package Entities
 
 import (
 	"fmt"
+
 	"proyecto.com/Infraestructure/Database"
 )
 
@@ -45,6 +46,7 @@ func (p Plant) GetPlant(plantId uint) (Plant, error) {
 	var plant Plant
 
 	result := Database.DB.Where("id = ?", plantId).First(&plant)
+	fmt.Println(plantId, plant.ID)
 	return plant, result.Error
 }
 
