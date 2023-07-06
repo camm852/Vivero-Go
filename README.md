@@ -45,5 +45,8 @@ To run this project, you will need to add the following environment variables to
 
 `DB_PORT`: database port
 
+`SECRET_KEY`: secret key for jwt
+
+
 The credentials are for a postgres database.
 You can find the sql in the root of the project.
