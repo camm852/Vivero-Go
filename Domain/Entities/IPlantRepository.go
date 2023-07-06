@@ -1,30 +1,52 @@
 package Entities
 
 import (
+	"fmt"
+
 	"proyecto.com/Infraestructure/Database"
 )
 
 type IPlantRepository interface {
+	GetPlantsByUserId(userId uint) []Plant
 	GetPlants() []Plant
-	GetPlant(id uint) (Plant, error)
+	GetPlant(plantId uint) (Plant, error)
 	NewPlant(plant *Plant) bool
 	UpdatePlant(plant *Plant) bool
-	DeletePlant(id uint) bool
+	DeletePlant(userId uint) bool
 }
 
 // implementar interfaz
-func (p Plant) GetPlants() []Plant {
+func (p Plant) GetPlantsByUserId(userId uint) []Plant {
 	var plants []Plant
-	_ = Database.DB.Find(&plants)
+	// Realizar consulta con GORM para obtener las plantas del usuario con el ID userId
+	err := Database.DB.Where("user_id = ?", userId).Find(&plants).Error
+	if err != nil {
+		// Manejo del error
+		// Por ejemplo, puedes devolver un slice vacío o registrar el error
+		return []Plant{}
+	}
 
 	return plants
 }
 
-func (p Plant) GetPlant(id uint) (Plant, error) {
+func (p Plant) GetPlants() []Plant {
+	var plants []Plant
+	// Realizar consulta con GORM para obtener las plantas del usuario con el ID userId
+	err := Database.DB.Find(&plants).Error
+	if err != nil {
+		// Manejo del error
+		// Por ejemplo, puedes devolver un slice vacío o registrar el error
+		return []Plant{}
+	}
+
+	return plants
+}
+
+func (p Plant) GetPlant(plantId uint) (Plant, error) {
 	var plant Plant
 
-	result := Database.DB.First(&plant, id)
-
+	result := Database.DB.Where("id = ?", plantId).First(&plant)
+	fmt.Println(plantId, plant.ID)
 	return plant, result.Error
 }
 
@@ -76,12 +98,12 @@ func (p Plant) UpdatePlant(plant *Plant) bool {
 	return true
 }
 
-func (p Plant) DeletePlant(id uint) bool {
-	plant, err := p.GetPlant(id)
+func (p Plant) DeletePlant(userId uint) bool {
+	plant, err := p.GetPlant(userId)
 	if err != nil {
 		return false
 	}
-	result := Database.DB.Delete(&plant)
+	result := Database.DB.Where("user_id = ?", userId).Delete(&plant)
 	if result.Error != nil {
 		return false
 	}

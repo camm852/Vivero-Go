@@ -2,6 +2,7 @@ package Services
 
 import (
 	"errors"
+
 	Entities "proyecto.com/Domain/Entities"
 )
 
@@ -9,6 +10,13 @@ func GetPlants() []Entities.Plant { //Carlos
 	var _plants Entities.IPlantRepository = Entities.Plant{}
 	var plants []Entities.Plant
 	plants = _plants.GetPlants()
+	return plants
+}
+
+func GetPlantsByUserId(userId uint) []Entities.Plant { //Carlos
+	var _plants Entities.IPlantRepository = Entities.Plant{}
+	var plants []Entities.Plant
+	plants = _plants.GetPlantsByUserId(userId)
 	return plants
 }
 
@@ -20,9 +28,7 @@ func GetPlant(id uint) (Entities.Plant, error) { //Danilo
 
 func NewPlant(plant *Entities.Plant) bool { //Hugo
 	var _plant Entities.IPlantRepository = Entities.Plant{}
-
 	var plantCreated = _plant.NewPlant(plant)
-
 	return plantCreated
 }
 
@@ -122,6 +128,7 @@ func DecreaseWater() { // Martin
 }
 
 func DecreaseNutrients() { //Hugo
+
 	plants := GetPlants()
 
 	for i := range plants {

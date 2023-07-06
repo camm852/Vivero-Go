@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"os"
+	"proyecto.com/Application/Middlewares"
 	"proyecto.com/Application/Services"
 	"proyecto.com/Infraestructure/Database"
 	"proyecto.com/Router"
@@ -22,6 +23,7 @@ func main() {
 	router := gin.Default()
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
+	router.Use(Middlewares.CorsMiddleware())
 	Router.PlantRoutes(router)
 	Router.UserRoutes(router)
 
