@@ -14,6 +14,9 @@ import (
 )
 
 func GetPlants(context *gin.Context) {
+
+	userId := context.MustGet("userId")
+	fmt.Println(userId)
 	var plants []Entities.Plant = Services.GetPlants()
 
 	context.IndentedJSON(http.StatusOK, plants)
@@ -25,32 +28,32 @@ func GetPlant(context *gin.Context) {
 	plant, error := Services.GetPlant(id)
 
 	if error != nil {
-		context.IndentedJSON(http.StatusNotFound, gin.H{"msg": "No se encontro la planta"})
+		context.IndentedJSON(http.StatusNotFound, gin.H{"msg": "Cannot find plant"})
 		return
 	}
 	context.IndentedJSON(http.StatusOK, plant)
 }
 
 func NewPlant(context *gin.Context) {
-	var newPlantDto dto.NewPlantDTO
+	var newPlantDto dto.NewPlantDTO //Token de usuario en el dto
 	if err := context.ShouldBindJSON(&newPlantDto); err != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
 		return
 	}
 	plant, err := Mappers.MapNewPlantDtoToPlant(newPlantDto)
 	if err != nil {
-		context.IndentedJSON(http.StatusInternalServerError, gin.H{"msg": "Error al mapear los datos"})
+		context.IndentedJSON(http.StatusInternalServerError, gin.H{"msg": "Cannot map data"})
 		return
 	}
-
+	// obtener el token y pasarlo comoo parametro
 	var isCreated = Services.NewPlant(plant)
 
 	if !isCreated {
-		context.IndentedJSON(http.StatusInternalServerError, gin.H{"msg": "Error al crear la planta"})
+		context.IndentedJSON(http.StatusInternalServerError, gin.H{"msg": "Cannot create plant"})
 		return
 	}
 
-	context.IndentedJSON(http.StatusCreated, gin.H{"msg": "Planta creada correctamente"})
+	context.IndentedJSON(http.StatusCreated, gin.H{"msg": "Plant created succesfully"})
 
 }
 
@@ -63,18 +66,18 @@ func UpdatePlant(context *gin.Context) {
 	plant, err := Mappers.MapUpdatePlantDtoToPlant(updatePlantDto)
 	fmt.Println(plant)
 	if err != nil {
-		context.IndentedJSON(http.StatusInternalServerError, gin.H{"msg": "Error al mapear los datos"})
+		context.IndentedJSON(http.StatusInternalServerError, gin.H{"msg": "Cannot map data"})
 		return
 	}
 
 	var isUpdated = Services.UpdatePlant(plant)
 
 	if !isUpdated {
-		context.IndentedJSON(http.StatusInternalServerError, gin.H{"msg": "Error al actualizar la planta"})
+		context.IndentedJSON(http.StatusInternalServerError, gin.H{"msg": "Cannot update plant"})
 		return
 	}
 
-	context.IndentedJSON(http.StatusCreated, gin.H{"msg": "Planta actualizada correctamente"})
+	context.IndentedJSON(http.StatusCreated, gin.H{"msg": "Plant updated succesfully"})
 }
 
 func DeletePlant(context *gin.Context) {
@@ -83,17 +86,17 @@ func DeletePlant(context *gin.Context) {
 	_, error := Services.GetPlant(id)
 
 	if error != nil {
-		context.IndentedJSON(http.StatusNotFound, gin.H{"msg": "No se encontro la planta"})
+		context.IndentedJSON(http.StatusNotFound, gin.H{"msg": "Cannot find plant"})
 		return
 	}
 
 	isDeleted := Services.DeletePlant(id)
 
 	if !isDeleted {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": "No se pudo eliminar la planta"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": "Cannot delete plant"})
 	}
 
-	context.IndentedJSON(http.StatusOK, gin.H{"msg": "Planta eliminada correctamente"})
+	context.IndentedJSON(http.StatusOK, gin.H{"msg": "Plant deleted succesfully"})
 }
 
 func AddNutrient(context *gin.Context) {

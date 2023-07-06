@@ -20,7 +20,10 @@ func main() {
 	Database.Connection()
 
 	router := gin.Default()
+	router.Use(gin.Logger())
+	router.Use(gin.Recovery())
 	Router.PlantRoutes(router)
+	Router.UserRoutes(router)
 
 	go decreaseNutrientsAndWater()
 
@@ -31,6 +34,5 @@ func decreaseNutrientsAndWater() {
 	for {
 		time.Sleep(time.Second * 2)
 		Services.DecreaseLife()
-		fmt.Println("Decresio")
 	}
 }
