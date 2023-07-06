@@ -3,10 +3,12 @@ package Router
 import (
 	"github.com/gin-gonic/gin"
 	"proyecto.com/Api"
+	"proyecto.com/Application/Middlewares"
 )
 
 func PlantRoutes(router *gin.Engine) {
 	plantRouter := router.Group("/api/plant")
+	plantRouter.Use(Middlewares.AuthRequired)
 	{
 		plantRouter.GET("/", Api.GetPlants)
 		plantRouter.POST("/", Api.NewPlant)
