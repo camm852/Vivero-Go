@@ -1,10 +1,10 @@
 package dto
 
 type PlantNutrientSupplyDTO struct {
-	Id     uint `form:"id"`
-	Amount uint `form:"amount"`
+	Id     uint    `json:"id"`
+	Amount float64 `json:"amount"`
 }
 type PlantWaterSupplyDTO struct {
-	Id     uint    `form:"id"`
-	Amount float64 `form:"amount"`
+	Id     uint    `json:"id"`
+	Amount float64 `json:"amount"`
 }

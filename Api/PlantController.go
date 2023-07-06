@@ -15,9 +15,9 @@ import (
 
 func GetPlants(context *gin.Context) {
 
-	userId := context.MustGet("userId")
+	userId := context.MustGet("userId").(float64)
 	fmt.Println(userId)
-	var plants []Entities.Plant = Services.GetPlants()
+	var plants []Entities.Plant = Services.GetPlantsByUserId(Utils.ParseFloat64ToUint(userId))
 
 	context.IndentedJSON(http.StatusOK, plants)
 }
@@ -40,12 +40,15 @@ func NewPlant(context *gin.Context) {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
 		return
 	}
+
 	plant, err := Mappers.MapNewPlantDtoToPlant(newPlantDto)
 	if err != nil {
 		context.IndentedJSON(http.StatusInternalServerError, gin.H{"msg": "Cannot map data"})
 		return
 	}
 	// obtener el token y pasarlo comoo parametro
+	userId := context.MustGet("userId").(float64)
+	plant.UserID = Utils.ParseFloat64ToUint(userId)
 	var isCreated = Services.NewPlant(plant)
 
 	if !isCreated {
@@ -109,19 +112,21 @@ func AddNutrient(context *gin.Context) {
 		}
 		return false
 	}() {
+		fmt.Println("Required id and amount fields")
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": "Required id and amount fields"})
 		return
 	}
-
-	if err := context.ShouldBind(&plantNutrientDTO); err != nil {
+	/*if err := context.ShouldBind(&plantNutrientDTO); err != nil {
 		// Bad Request
+		fmt.Println("Required id<uint> and amount<uint> fields")
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": "Required id<uint> and amount<uint> fields"})
 		return
-	}
+	}*/
 
 	id := plantNutrientDTO.Id
 	if id < 0 {
 		// Bad Request
+
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": "The id cannot be negative"})
 		return
 	}
@@ -216,11 +221,11 @@ func AddWater(context *gin.Context) {
 		return
 	}
 
-	if err := context.ShouldBind(&plantWatertDTO); err != nil {
+	/*if err := context.ShouldBind(&plantWatertDTO); err != nil {
 		// Bad Request
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": "Required id<uint> and amount<uint> fields"})
 		return
-	}
+	}*/
 
 	id := plantWatertDTO.Id
 	if id < 0 {
