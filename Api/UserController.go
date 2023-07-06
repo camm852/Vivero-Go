@@ -39,5 +39,5 @@ func SignIn(context *gin.Context) {
 		return
 	}
 
-	context.IndentedJSON(http.StatusCreated, gin.H{"msg": userLogin})
+	context.IndentedJSON(http.StatusOK, gin.H{"msg": userLogin})
 }

@@ -15,9 +15,9 @@ import (
 
 func GetPlants(context *gin.Context) {
 
-	userId := context.MustGet("userId")
+	userId := context.MustGet("userId").(float64)
 	fmt.Println(userId)
-	var plants []Entities.Plant = Services.GetPlants()
+	var plants []Entities.Plant = Services.GetPlantsByUserId(Utils.ParseFloat64ToUint(userId))
 
 	context.IndentedJSON(http.StatusOK, plants)
 }
@@ -40,12 +40,15 @@ func NewPlant(context *gin.Context) {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
 		return
 	}
+
 	plant, err := Mappers.MapNewPlantDtoToPlant(newPlantDto)
 	if err != nil {
 		context.IndentedJSON(http.StatusInternalServerError, gin.H{"msg": "Cannot map data"})
 		return
 	}
 	// obtener el token y pasarlo comoo parametro
+	userId := context.MustGet("userId").(float64)
+	plant.UserID = Utils.ParseFloat64ToUint(userId)
 	var isCreated = Services.NewPlant(plant)
 
 	if !isCreated {
